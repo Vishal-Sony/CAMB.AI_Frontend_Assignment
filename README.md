@@ -49,7 +49,7 @@ Follow these steps to get the project up and running on your local machine:
    npm run dev   # or yarn dev
    ```
 
-2. Open your browser and visit [http://localhost:3000](http://localhost:3000) to see the React Audio Pill Player in action.
+2. Open your browser and visit [http://localhost:3000](http://127.0.0.1:5173/) to see the React Audio Pill Player in action.
 
 ## How to Use
 
