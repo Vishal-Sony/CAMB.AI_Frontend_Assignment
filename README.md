@@ -26,13 +26,13 @@ Follow these steps to get the project up and running on your local machine:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/react-audio-pill-player.git
+   git clone https://github.com/Vishal-Sony/CAMB.AI_Frontend_Assignment
    ```
 
 2. Navigate to the project directory:
 
    ```bash
-   cd react-audio-pill-player
+   cd CAMB.AI_Frontend_Assignment/CAMB.AI_FE_ASS
    ```
 
 3. Install dependencies:
@@ -75,9 +75,3 @@ Follow these steps to get the project up and running on your local machine:
 
 Feel free to contribute to this project. Fork the repository, make your changes, and submit a pull request.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
-```
-
-Make sure to replace placeholders like `your-username` with your actual GitHub username and update any URLs or specific details related to your project.
