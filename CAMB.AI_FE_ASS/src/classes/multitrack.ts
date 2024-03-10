@@ -128,6 +128,7 @@ class MultiTrack extends EventEmitter<MultitrackEvents> {
 
     this.rendering = initRendering(this.tracks, this.options)
 
+
     this.rendering.addDropHandler((trackId: TrackId) => {
       this.emit('drop', { id: trackId })
     })
@@ -169,7 +170,7 @@ class MultiTrack extends EventEmitter<MultitrackEvents> {
       this.durations[placeholderAudioIndex] = this.maxDuration
     }
 
-    this.rendering.setMainWidth(durations, this.maxDuration)
+    // this.rendering.setMainWidth(durations, this.maxDuration)
   }
 
   private initAudio(
@@ -642,7 +643,10 @@ class MultiTrack extends EventEmitter<MultitrackEvents> {
     const trackBorderColor = "#7C7C7C";
     const trackBackground = "#2D2D2D";
 
+
     this.tracks.splice(-1,0,emptyTrack)
+
+  
     const container = document.createElement('div')
     container.style.position = 'relative'
     const borderDiv = document.createElement('div')

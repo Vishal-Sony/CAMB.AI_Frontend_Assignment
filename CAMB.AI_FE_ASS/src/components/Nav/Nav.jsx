@@ -21,10 +21,10 @@ export default function Nav({multitrackRef}) {
   return (
     <div id='nav'>
       <div id='nav-logo'><img src={Logo} alt="logo" /></div>
-        <div id='size-slider' style={{position:'fixed', right:110,zIndex:'1', top:50}}>
+        <div id='size-slider' style={{position:'fixed', right:110,zIndex:'100', top:50}}>
           <input id='slider' type="range" min="1" max="100" defaultValue={1} ref={sliderRef} onInput={sliderInput} />
         </div>
-        <div id='download-button-container' style={{position:'fixed', right:20,zIndex:'1'}} onClick={handlePlay}>
+        <div id='download-button-container' style={{position:'fixed', right:20,zIndex:'100'}} onClick={handlePlay}>
           <button id='download-button' ><img width="25" height="25" src={ppIcon} alt="pause-play"/></button>
         </div>
     </div>
