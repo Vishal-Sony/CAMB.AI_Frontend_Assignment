@@ -2,7 +2,6 @@ import React ,{ useRef, useState, useMemo, useCallback } from 'react'
 import Uploadzone from './Dropzone/Uploadzone'
 import cuid  from 'cuid';
 import MultiTrack from './MultiTrack/MultiTrack';
-import MultiTrack2 from './MultiTrack/MultiTrack2';
 
 const audioUrls = [
   '/src/components/Player/temp.mp3',

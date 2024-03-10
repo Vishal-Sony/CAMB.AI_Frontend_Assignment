@@ -1,11 +1,13 @@
 import React, { useRef, useState, useEffect } from "react";
-import Multitrack from "wavesurfer-multitrack";
+import Multitrack from "../../../classes/multitrack";
 
 export default function MultiTrack({ file, multitrackRef }) {
   const containerRef = useRef(null);
+  const [cacheAudio,setCacheAudio] = useState([])
+  console.log(cacheAudio);
   useEffect(() => {
     if (file.length > 0) {
-      multitrackRef.current = Multitrack.create(
+      multitrackRef.current  = Multitrack.create(
         file.map((msc) => {
           return {
             id: 0,
@@ -35,8 +37,10 @@ export default function MultiTrack({ file, multitrackRef }) {
             dragPointFill: "rgba(255, 255, 255, 0.8)",
             dragPointStroke: "rgba(255, 255, 255, 0.3)",
           },
-        }
+        },
+        cacheAudio
       );
+      setTimeout(()=>setCacheAudio(multitrackRef.current.getAudios()),1000)
       return () => {
         if (multitrackRef.current) {
           multitrackRef.current.destroy();
