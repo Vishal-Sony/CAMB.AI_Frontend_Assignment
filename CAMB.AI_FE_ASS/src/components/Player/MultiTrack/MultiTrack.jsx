@@ -3,7 +3,6 @@ import Multitrack from "wavesurfer-multitrack";
 
 export default function MultiTrack({ file, multitrackRef }) {
   const containerRef = useRef(null);
-
   useEffect(() => {
     if (file.length > 0) {
       multitrackRef.current = Multitrack.create(
@@ -44,6 +43,7 @@ export default function MultiTrack({ file, multitrackRef }) {
         }
       };
     }
+    
   }, [containerRef, file]);
 
   return (
