@@ -113,61 +113,64 @@ class MultiTrack extends EventEmitter<MultitrackEvents> {
     return new MultiTrack(tracks, options);
   }
 
-  
   constructor(tracks: MultitrackTracks, options: MultitrackOptions) {
-    super()
+    super();
 
-    this.audioContext = new AudioContext()
+    this.audioContext = new AudioContext();
 
     this.tracks = tracks.concat({ ...PLACEHOLDER_TRACK }).map((track) => ({
       ...track,
       startPosition: track.startPosition || 0,
-      peaks: track.peaks || (track.url || track.options?.media ? undefined : [new Float32Array()]),
-    }))
-    this.options = options
+      peaks:
+        track.peaks ||
+        (track.url || track.options?.media ? undefined : [new Float32Array()]),
+    }));
+    this.options = options;
 
-    this.rendering = initRendering(this.tracks, this.options)
-
+    this.rendering = initRendering(this.tracks, this.options);
 
     this.rendering.addDropHandler((trackId: TrackId) => {
-      this.emit('drop', { id: trackId })
-    })
+      this.emit("drop", { id: trackId });
+    });
 
     this.initAllAudios().then((durations) => {
-      this.initDurations(durations)
+      this.initDurations(durations);
 
-      this.initAllWavesurfers()
+      this.initAllWavesurfers();
 
       this.rendering.containers.forEach((container, index) => {
         if (tracks[index]?.draggable) {
           const unsubscribe = initDragging(
             container,
             (delta: number) => this.onDrag(index, delta),
-            options.rightButtonDrag,
-          )
-          this.wavesurfers[index].once('destroy', unsubscribe)
+            options.rightButtonDrag
+          );
+          this.wavesurfers[index].once("destroy", unsubscribe);
         }
-      })
+      });
 
       this.rendering.addClickHandler((position) => {
-        this.seekTo(position)
-      })
+        this.seekTo(position);
+      });
 
-      this.emit('canplay')
-    })
+      this.emit("canplay");
+    });
   }
   private initDurations(durations: number[]) {
-    this.durations = durations
+    this.durations = durations;
 
     this.maxDuration = this.tracks.reduce((max, track, index) => {
-      return Math.max(max, track.startPosition + durations[index])
-    }, 0)
+      return Math.max(max, track.startPosition + durations[index]);
+    }, 0);
 
-    const placeholderAudioIndex = this.audios.findIndex((a) => a.src === PLACEHOLDER_TRACK.url)
-    const placeholderAudio = this.audios[placeholderAudioIndex]
+    const placeholderAudioIndex = this.audios.findIndex(
+      (a) => a.src === PLACEHOLDER_TRACK.url
+    );
+    const placeholderAudio = this.audios[placeholderAudioIndex];
     if (placeholderAudio) {
-      (placeholderAudio as WebAudioPlayer & { duration: number }).duration = this.maxDuration
-      this.durations[placeholderAudioIndex] = this.maxDuration
+      (placeholderAudio as WebAudioPlayer & { duration: number }).duration =
+        this.maxDuration;
+      this.durations[placeholderAudioIndex] = this.maxDuration;
     }
 
     // this.rendering.setMainWidth(durations, this.maxDuration)
@@ -455,6 +458,7 @@ class MultiTrack extends EventEmitter<MultitrackEvents> {
 
     // Update the current time of each audio
     this.tracks.forEach((track, index) => {
+      debugger
       const audio = this.audios[index];
       const duration = this.durations[index];
       const newTime = time - track.startPosition;
@@ -623,7 +627,10 @@ class MultiTrack extends EventEmitter<MultitrackEvents> {
   }
 
   // add track by uploading audio -vishal
-  public async appendTrack(url: string){
+  public async appendTrack(url: string) {
+    this.rendering.addClickHandler((position) => {
+      this.seekTo(position);
+    });
     const newTrackId = this.generateTrackId();
 
     const track: TrackOptions = {
@@ -636,58 +643,63 @@ class MultiTrack extends EventEmitter<MultitrackEvents> {
         progressColor: "hsl(161, 87%, 20%)",
       },
       url: url,
-    }
+    };
     const emptyTrack: TrackOptions = {
       id: newTrackId,
-    }
+    };
     const trackBorderColor = "#7C7C7C";
     const trackBackground = "#2D2D2D";
 
+    this.tracks.splice(-1, 0, emptyTrack);
 
-    this.tracks.splice(-1,0,emptyTrack)
+    const container = document.createElement("div");
+    container.style.position = "relative";
+    const borderDiv = document.createElement("div");
+    borderDiv.setAttribute(
+      "style",
+      `width: 100%; height: 2px; background-color: ${trackBorderColor}`
+    );
+    const dropArea = document.createElement("div");
+    dropArea.setAttribute(
+      "style",
+      `position: absolute; z-index: 10; left: 10px; top: 10px; right: 10px; bottom: 10px; border: 2px dashed ${trackBorderColor};`
+    );
+    dropArea.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropArea.style.background = trackBackground || "";
+    });
+    dropArea.addEventListener("dragleave", (e) => {
+      e.preventDefault();
+      dropArea.style.background = "";
+    });
+    dropArea.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropArea.style.background = "";
+    });
+    container.appendChild(dropArea);
 
-  
-    const container = document.createElement('div')
-    container.style.position = 'relative'
-    const borderDiv = document.createElement('div')
-    borderDiv.setAttribute('style', `width: 100%; height: 2px; background-color: ${trackBorderColor}`)
-    this.rendering.wrapper.insertBefore(borderDiv,this.rendering.wrapper.lastChild)
-    const dropArea = document.createElement('div')
-      dropArea.setAttribute(
-        'style',
-        `position: absolute; z-index: 10; left: 10px; top: 10px; right: 10px; bottom: 10px; border: 2px dashed ${trackBorderColor};`,
-      )
-      dropArea.addEventListener('dragover', (e) => {
-        e.preventDefault()
-        dropArea.style.background = trackBackground || ''
-      })
-      dropArea.addEventListener('dragleave', (e) => {
-        e.preventDefault()
-        dropArea.style.background = ''
-      })
-      dropArea.addEventListener('drop', (e) => {
-        e.preventDefault()
-        dropArea.style.background = ''
-      })
-      container.appendChild(dropArea)
-      
-      this.rendering.wrapper.insertBefore(container,this.rendering.wrapper.lastChild)
-      this.rendering.containers.splice(-1,0,container)
-      
-      
-      const trackAudio = await this.initAudio(emptyTrack)
-      this.audios.splice(-1,0,trackAudio)
-      
-      this.durations.splice(-1,0,0)
-      this.initDurations(this.durations)
+    this.rendering.wrapper.insertBefore(
+      container,
+      this.rendering.wrapper.lastChild
+    );
+    this.rendering.wrapper.insertBefore(
+      borderDiv,
+      this.rendering.wrapper.lastChild
+    );
+    this.rendering.containers.splice(-1, 0, container);
 
-      const trackIndex = this.tracks.length - 2
+    const trackAudio = await this.initAudio(emptyTrack);
+    this.audios.splice(-1, 0, trackAudio);
 
-      const trackWavesurfer = this.initWavesurfer(emptyTrack,trackIndex)
-      this.wavesurfers.splice(-1,0,trackWavesurfer)
+    this.durations.splice(-1, 0, 0);
+    this.initDurations(this.durations);
 
-      this.addTrack(track)
-      
+    const trackIndex = this.tracks.length - 2;
+
+    const trackWavesurfer = this.initWavesurfer(emptyTrack, trackIndex);
+    this.wavesurfers.splice(-1, 0, trackWavesurfer);
+
+    this.addTrack(track);
   }
   //generate random id -vishal
   private generateTrackId(): TrackId {
@@ -847,10 +859,13 @@ function initRendering(tracks: MultitrackTracks, options: MultitrackOptions) {
 
     // Click to seek
     addClickHandler: (onClick: (position: number) => void) => {
+      debugger;
       wrapper.addEventListener("click", (e) => {
         const rect = wrapper.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const position = x / wrapper.offsetWidth;
+        console.log(position);
+        
         onClick(position);
       });
     },
