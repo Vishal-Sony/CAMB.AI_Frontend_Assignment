@@ -189,6 +189,8 @@ class MultiTrack extends EventEmitter<MultitrackEvents> {
     // Create a wavesurfer instance
     const ws = WaveSurfer.create({
       ...track.options,
+      progressColor: '#10EAA5',
+      waveColor: '#10EAA5',
       container,
       minPxPerSec: 0,
       media: this.audios[index] as HTMLMediaElement,
@@ -489,6 +491,7 @@ class MultiTrack extends EventEmitter<MultitrackEvents> {
     this.startSync()
 
     const indexes = this.findCurrentTracks()
+
     indexes.forEach((index) => {
       this.audios[index]?.play()
     })
@@ -558,11 +561,14 @@ class MultiTrack extends EventEmitter<MultitrackEvents> {
    // add track by uploading audio -vishal
  
    public async appendTrack(url: string) {
+    var check = 0
     if(this.isPlaying()){
+      check = 1
       this.pause()
     }
     const newTrackId = this.generateTrackId();
 
+    
     const track: TrackOptions = {
       id: newTrackId,
       draggable: true,
@@ -574,9 +580,8 @@ class MultiTrack extends EventEmitter<MultitrackEvents> {
       },
       url: url,
     };
-    const emptyTrack: TrackOptions = {
-      id: newTrackId,
-    };
+
+
     const trackBorderColor = "#7C7C7C";
     const trackBackground = "#2D2D2D";
 
@@ -625,7 +630,7 @@ class MultiTrack extends EventEmitter<MultitrackEvents> {
       this.initDurations(durations);
 
       // this.initAllWavesurfers();
-      const trackWavesurfer = this.initWavesurfer(emptyTrack, trackIndex);
+      const trackWavesurfer = this.initWavesurfer(track, trackIndex);
       this.wavesurfers.splice(-1, 0, trackWavesurfer);
 
       this.rendering.containers.forEach((container, index) => {
@@ -659,12 +664,6 @@ class MultiTrack extends EventEmitter<MultitrackEvents> {
 
     // console.log(this.currentTime);
     
-
-    // if(check){
-    //   this.play()
-    // }
-    
-
   }
   //generate random id -vishal
   private generateTrackId(): TrackId {
@@ -787,6 +786,7 @@ function initRendering(tracks: MultitrackTracks, options: MultitrackOptions) {
   return {
     containers,
     wrapper,
+    cursor,
     // Set the start offset
     setContainerOffsets,
 
