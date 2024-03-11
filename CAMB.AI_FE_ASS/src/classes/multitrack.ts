@@ -528,6 +528,7 @@ class MultiTrack extends EventEmitter<MultitrackEvents> {
   }
 
   public addTrack(track: TrackOptions) {
+
     const index = this.tracks.findIndex((t) => t.id === track.id)
     if (index !== -1) {
       this.tracks[index] = track
@@ -557,13 +558,15 @@ class MultiTrack extends EventEmitter<MultitrackEvents> {
    // add track by uploading audio -vishal
  
    public async appendTrack(url: string) {
-    // console.log(this.currentTime)
+    if(this.isPlaying()){
+      this.pause()
+    }
     const newTrackId = this.generateTrackId();
 
     const track: TrackOptions = {
       id: newTrackId,
       draggable: true,
-      startPosition: 0,
+      startPosition: this.currentTime,
       volume: 1,
       options: {
         waveColor: "hsl(161, 87%, 49%)",

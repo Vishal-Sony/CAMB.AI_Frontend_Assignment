@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import Multitrack from "wavesurfer-multitrack";
+import Multitrack from "../../../classes/multitrack";
 import audio from "../../../../temp.mp3"
 import audio2 from "../../../../temp2.mp3"
 import audio3 from "../../../../temp3.mp3"
@@ -11,45 +11,50 @@ export default function MultiTrack({ file, multitrackRef }) {
     if (containerRef.current) {
       multitrackRef.current = Multitrack.create(
         [
-          {
-            id: 0,
-            draggable: true,
-            startPosition: 0,
-            volume: 1,
-            options: {
-              waveColor: "hsl(161, 87%, 49%)",
-              progressColor: "hsl(161, 87%, 20%)",
-            },
-            url: audio,
-      },
-      {
-        id: 1,
-        draggable: true,
-        startPosition: 0,
-        volume: 1,
-        options: {
-          waveColor: "hsl(161, 87%, 49%)",
-          progressColor: "hsl(161, 87%, 20%)",
-        },
-        url: audio2,
-  },
-  {
-    id: 2,
-    draggable: true,
-    startPosition: 0,
-    volume: 1,
-    options: {
-      waveColor: "hsl(161, 87%, 49%)",
-      progressColor: "hsl(161, 87%, 20%)",
-    },
-    url: audio3,
-}
+          // file.map((msc) => {
+          //   return {
+          //     url: msc.src,
+          //   };
+          // }),
+//           {
+//             id: 0,
+//             draggable: true,
+//             startPosition: 0,
+//             volume: 1,
+//             options: {
+//               waveColor: "hsl(161, 87%, 49%)",
+//               progressColor: "hsl(161, 87%, 20%)",
+//             },
+//             url: audio,
+//       },
+//       {
+//         id: 1,
+//         draggable: true,
+//         startPosition: 0,
+//         volume: 1,
+//         options: {
+//           waveColor: "hsl(161, 87%, 49%)",
+//           progressColor: "hsl(161, 87%, 20%)",
+//         },
+//         url: audio2,
+//   },
+//   {
+//     id: 2,
+//     draggable: true,
+//     startPosition: 0,
+//     volume: 1,
+//     options: {
+//       waveColor: "hsl(161, 87%, 49%)",
+//       progressColor: "hsl(161, 87%, 20%)",
+//     },
+//     url: audio3,
+// }
 
         ],
         {
           container: containerRef.current,
           minPxPerSec: 10,
-          rightButtonDrag: true,
+          rightButtonDrag: false,
           cursorWidth: 2,
           cursorColor: "#D72F21",
           trackBackground: "#2D2D2D",
