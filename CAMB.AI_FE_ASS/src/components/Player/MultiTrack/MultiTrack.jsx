@@ -1,28 +1,60 @@
-import React, { useRef, useState, useEffect } from "react";
-import Multitrack from "wavesurfer-multitrack";
+import React, { useRef, useEffect } from "react";
+import Multitrack from "../../../classes/multitrack";
+import audio from "../../../../temp.mp3"
+import audio2 from "../../../../temp2.mp3"
+import audio3 from "../../../../temp3.mp3"
 
 export default function MultiTrack({ file, multitrackRef }) {
   const containerRef = useRef(null);
+
   useEffect(() => {
-    if (file.length > 0) {
+    if (containerRef.current) {
       multitrackRef.current = Multitrack.create(
-        file.map((msc) => {
-          return {
-            id: 0,
-            draggable: true,
-            startPosition: 0,
-            volume: 1,
-            options: {
-              waveColor: "hsl(161, 87%, 49%)",
-              progressColor: "hsl(161, 87%, 20%)",
-            },
-            url: msc.src,
-          };
-        }),
+        [
+          // file.map((msc) => {
+          //   return {
+          //     url: msc.src,
+          //   };
+          // }),
+//           {
+//             id: 0,
+//             draggable: true,
+//             startPosition: 0,
+//             volume: 1,
+//             options: {
+//               waveColor: "hsl(161, 87%, 49%)",
+//               progressColor: "hsl(161, 87%, 20%)",
+//             },
+//             url: audio,
+//       },
+//       {
+//         id: 1,
+//         draggable: true,
+//         startPosition: 0,
+//         volume: 1,
+//         options: {
+//           waveColor: "hsl(161, 87%, 49%)",
+//           progressColor: "hsl(161, 87%, 20%)",
+//         },
+//         url: audio2,
+//   },
+//   {
+//     id: 2,
+//     draggable: true,
+//     startPosition: 0,
+//     volume: 1,
+//     options: {
+//       waveColor: "hsl(161, 87%, 49%)",
+//       progressColor: "hsl(161, 87%, 20%)",
+//     },
+//     url: audio3,
+// }
+
+        ],
         {
-          container: containerRef.current, // required!
-          minPxPerSec: 10, // zoom level
-          rightButtonDrag: false, // set to true to drag with right mouse button
+          container: containerRef.current,
+          minPxPerSec: 10,
+          rightButtonDrag: false,
           cursorWidth: 2,
           cursorColor: "#D72F21",
           trackBackground: "#2D2D2D",
@@ -37,14 +69,14 @@ export default function MultiTrack({ file, multitrackRef }) {
           },
         }
       );
-      return () => {
-        if (multitrackRef.current) {
-          multitrackRef.current.destroy();
-        }
-      };
     }
-    
-  }, [containerRef, file]);
+
+    return () => {
+      if (multitrackRef.current) {
+        multitrackRef.current.destroy();
+      }
+    };
+  }, [containerRef, multitrackRef]);
 
   return (
     <div>
